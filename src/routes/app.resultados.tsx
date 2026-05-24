@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { store, fmtBRL, usePersisted, type Goal } from "@/lib/roadfin-store";
 import { ChevronDown, TrendingUp } from "lucide-react";
+import { getProfitStatus, getGoalStatus, getMarginStatus, getDayStatus, expectedMonthProgressPct } from "@/lib/status";
+import { StatusBadge, StatusDot, statusBgClass } from "@/components/roadfin/StatusBadge";
 
 export const Route = createFileRoute("/app/resultados")({
   component: ResultsPage,
@@ -51,7 +53,10 @@ function ResultsPage() {
     .reduce((s, l) => s + l.netProfit, 0);
   const pct = monthlyGoal > 0 ? Math.min(100, (monthProfit / monthlyGoal) * 100) : 0;
   const daysLeft = endOfMonth().getDate() - new Date().getDate();
-  const onTrack = pct >= (1 - daysLeft / 30) * 100;
+  const expectedPct = expectedMonthProgressPct();
+  const goalStatus = monthlyGoal > 0 ? getGoalStatus(pct, expectedPct) : "neutral";
+  const profitStatus = getProfitStatus(totals.profit, totals.gross);
+  const marginStatus = getMarginStatus(margin);
 
   return (
     <main className="px-5 pt-6 safe-top">
@@ -69,10 +74,13 @@ function ResultsPage() {
         ))}
       </div>
 
-      <section className="mt-5 rounded-3xl bg-primary p-6 text-primary-foreground shadow-elevated">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider">
-          <TrendingUp className="h-3 w-3" /> Resultado de lucro real
-        </span>
+      <section className={`mt-5 rounded-3xl p-6 shadow-elevated ${statusBgClass(profitStatus)}`}>
+        <div className="flex items-center justify-between">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider">
+            <TrendingUp className="h-3 w-3" /> Resultado de lucro real
+          </span>
+          <StatusBadge status={profitStatus} className="bg-white/15 text-current" />
+        </div>
         <p className="mt-3 text-[11px] font-semibold uppercase tracking-wider opacity-80">Lucro Real</p>
         <p className="mt-1 text-[40px] font-bold tracking-tight">{fmtBRL(totals.profit)}</p>
       </section>
@@ -80,7 +88,7 @@ function ResultsPage() {
       <section className="mt-5 grid grid-cols-2 gap-3">
         <Kpi label="Horas trabalhadas" value={`${totals.hours.toFixed(1)}h`} />
         <Kpi label="Ganho / hora" value={fmtBRL(perHour)} />
-        <Kpi label="Margem de lucro" value={`${margin.toFixed(1)}%`} />
+        <Kpi label="Margem de lucro" value={`${margin.toFixed(1)}%`} badge={<StatusBadge status={marginStatus} />} />
         <Kpi label="Ganho / KM" value={fmtBRL(perKm)} />
       </section>
 
@@ -88,10 +96,20 @@ function ResultsPage() {
         <section className="mt-5 rounded-3xl surface p-5 shadow-card">
           <div className="flex items-center justify-between">
             <p className="text-[13px] font-semibold text-muted-foreground">Objetivo mensal</p>
-            <p className="text-[13px] font-bold text-primary">{pct.toFixed(0)}%</p>
+            <div className="flex items-center gap-2">
+              <StatusBadge status={goalStatus} />
+              <p className="text-[13px] font-bold">{pct.toFixed(0)}%</p>
+            </div>
           </div>
           <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
-            <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} />
+            <div
+              className={`h-full rounded-full transition-all ${
+                goalStatus === "positive" ? "bg-status-positive" :
+                goalStatus === "warning" ? "bg-status-warning" :
+                goalStatus === "negative" ? "bg-status-negative" : "bg-status-neutral"
+              }`}
+              style={{ width: `${pct}%` }}
+            />
           </div>
           <div className="mt-4 flex items-end justify-between">
             <div>
@@ -104,7 +122,11 @@ function ResultsPage() {
             </div>
           </div>
           <p className="mt-3 text-[13px] text-muted-foreground">
-            {daysLeft} dias restantes. {onTrack ? "Você está no ritmo certo. 👏" : "Hora de acelerar. 🚀"}
+            {daysLeft} dias restantes. {
+              goalStatus === "positive" ? "Você está no ritmo certo. 👏" :
+              goalStatus === "warning" ? "Atenção: ritmo abaixo do esperado." :
+              "Hora de acelerar. 🚀"
+            }
           </p>
         </section>
       )}
@@ -118,25 +140,36 @@ function ResultsPage() {
 
       <Expandable title="Registros" value={`${filtered.length}`}>
         {filtered.length === 0 && <p className="px-1 py-3 text-[13px] text-muted-foreground">Nenhum registro neste período.</p>}
-        {filtered.map((l) => (
-          <div key={l.id} className="flex items-center justify-between py-3">
-            <div>
-              <p className="text-[14px] font-semibold">{new Date(l.date).toLocaleDateString("pt-BR")}</p>
-              <p className="text-[12px] text-muted-foreground">{l.hoursWorked.toFixed(1)}h · {l.kmDriven} km</p>
+        {filtered.map((l) => {
+          const s = getDayStatus(l);
+          return (
+            <div key={l.id} className="flex items-center justify-between py-3">
+              <div className="flex items-center gap-3">
+                <StatusDot status={s} />
+                <div>
+                  <p className="text-[14px] font-semibold">{new Date(l.date).toLocaleDateString("pt-BR")}</p>
+                  <p className="text-[12px] text-muted-foreground">{l.hoursWorked.toFixed(1)}h · {l.kmDriven} km</p>
+                </div>
+              </div>
+              <p className={`text-[15px] font-bold ${
+                s === "negative" ? "text-status-negative" :
+                s === "warning" ? "text-status-warning" :
+                s === "positive" ? "text-status-positive" : "text-status-neutral"
+              }`}>{fmtBRL(l.netProfit)}</p>
             </div>
-            <p className="text-[15px] font-bold text-primary">{fmtBRL(l.netProfit)}</p>
-          </div>
-        ))}
+          );
+        })}
       </Expandable>
     </main>
   );
 }
 
-function Kpi({ label, value }: { label: string; value: string }) {
+function Kpi({ label, value, badge }: { label: string; value: string; badge?: React.ReactNode }) {
   return (
     <div className="rounded-2xl surface p-4 shadow-card">
       <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
       <p className="mt-2 text-[20px] font-bold">{value}</p>
+      {badge && <div className="mt-2">{badge}</div>}
     </div>
   );
 }

@@ -2,6 +2,8 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, X } from "lucide-react";
 import { store, computeLog, fmtBRL, type Vehicle } from "@/lib/roadfin-store";
+import { getProfitStatus } from "@/lib/status";
+import { StatusBadge, statusBgClass } from "@/components/roadfin/StatusBadge";
 import { NumberField, StepShell, TextField } from "../routes/onboarding.veiculo";
 
 export const Route = createFileRoute("/app/registrar")({
@@ -163,8 +165,11 @@ function ResultStep({ result, onSave, onDiscard }: { result: ReturnType<typeof c
       <h1 className="text-[26px] font-bold tracking-tight">Seu Lucro Real</h1>
       <p className="mt-1 text-[14px] text-muted-foreground">A matemática não mente.</p>
 
-      <div className="mt-6 rounded-3xl bg-primary p-6 text-primary-foreground shadow-elevated">
-        <p className="text-[11px] font-semibold uppercase tracking-wider opacity-80">Lucro líquido real</p>
+      <div className={`mt-6 rounded-3xl p-6 shadow-elevated ${statusBgClass(getProfitStatus(result.netProfit, result.grossRevenue))}`}>
+        <div className="flex items-center justify-between">
+          <p className="text-[11px] font-semibold uppercase tracking-wider opacity-80">Lucro líquido real</p>
+          <StatusBadge status={getProfitStatus(result.netProfit, result.grossRevenue)} className="bg-white/15 text-current" />
+        </div>
         <p className="mt-2 text-[40px] font-bold tracking-tight">{fmtBRL(result.netProfit)}</p>
         <p className="mt-1 text-[13px] opacity-80">Margem de {result.profitMargin.toFixed(1)}%</p>
       </div>

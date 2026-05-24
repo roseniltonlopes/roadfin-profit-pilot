@@ -3,6 +3,8 @@ import { Bell, Play, Calculator, CalendarOff, Plus, Sparkles } from "lucide-reac
 import { ThemeToggle } from "@/components/roadfin/ThemeToggle";
 import { Logo } from "@/components/roadfin/Logo";
 import { usePersisted, type User, fmtBRL, store } from "@/lib/roadfin-store";
+import { getProfitStatus } from "@/lib/status";
+import { StatusBadge, statusBgClass } from "@/components/roadfin/StatusBadge";
 
 export const Route = createFileRoute("/app/")({
   component: TodayPage,
@@ -21,6 +23,14 @@ function TodayPage() {
 
   const logsToday = store.getLogs().filter((l) => l.date === new Date().toISOString().slice(0, 10));
   const todayProfit = logsToday.reduce((s, l) => s + l.netProfit, 0);
+  const todayGross = logsToday.reduce((s, l) => s + l.grossRevenue, 0);
+  const dayStatus = logsToday.length === 0 ? "neutral" : getProfitStatus(todayProfit, todayGross);
+  const dayMessages: Record<typeof dayStatus, string> = {
+    positive: "Você está no ritmo certo. 👏",
+    warning: "Atenção: margem apertada hoje.",
+    negative: "Hoje fechou no prejuízo. Vamos analisar.",
+    neutral: "Lance sua primeira jornada para ver o resultado.",
+  };
 
   return (
     <main className="px-5 pt-6 safe-top">
@@ -61,12 +71,13 @@ function TodayPage() {
         </Link>
       )}
 
-      <section className="mt-5 rounded-3xl bg-primary p-6 text-primary-foreground shadow-elevated">
-        <p className="text-[11px] font-semibold uppercase tracking-wider opacity-80">Lucro real de hoje</p>
+      <section className={`mt-5 rounded-3xl p-6 shadow-elevated ${statusBgClass(dayStatus)}`}>
+        <div className="flex items-center justify-between">
+          <p className="text-[11px] font-semibold uppercase tracking-wider opacity-80">Lucro real de hoje</p>
+          <StatusBadge status={dayStatus} className="bg-white/15 text-current" showIcon />
+        </div>
         <p className="mt-2 text-[40px] font-bold leading-none tracking-tight">{fmtBRL(todayProfit)}</p>
-        <p className="mt-2 text-[13px] opacity-80">
-          {todayProfit > 0 ? "Você está no ritmo certo." : "Lance sua primeira jornada para ver o resultado."}
-        </p>
+        <p className="mt-2 text-[13px] opacity-80">{dayMessages[dayStatus]}</p>
       </section>
 
       <section className="mt-5 space-y-3">

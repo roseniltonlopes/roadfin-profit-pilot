@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { usePersisted, type Goal, fmtBRL } from "@/lib/roadfin-store";
+import { usePersisted, type Goal, fmtBRL, store } from "@/lib/roadfin-store";
 import { Target, Pencil } from "lucide-react";
+import { getGoalStatus, expectedMonthProgressPct } from "@/lib/status";
+import { StatusBadge } from "@/components/roadfin/StatusBadge";
 
 export const Route = createFileRoute("/app/meta")({
   component: GoalPage,
@@ -40,11 +42,27 @@ function GoalPage() {
         </Link>
       </header>
 
-      <section className="mt-5 rounded-3xl bg-primary p-6 text-primary-foreground shadow-elevated">
-        <p className="text-[11px] font-semibold uppercase tracking-wider opacity-80">Dinheiro no seu bolso</p>
-        <p className="mt-2 text-[40px] font-bold tracking-tight">{fmtBRL(goal.monthlyProfitGoal)}</p>
-        <p className="mt-1 text-[13px] opacity-80">por mês</p>
-      </section>
+      {(() => {
+        const monthProfit = store.getLogs()
+          .filter((l) => {
+            const d = new Date(l.date);
+            const n = new Date();
+            return d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear();
+          })
+          .reduce((s, l) => s + l.netProfit, 0);
+        const pct = goal.monthlyProfitGoal > 0 ? (monthProfit / goal.monthlyProfitGoal) * 100 : 0;
+        const goalStatus = getGoalStatus(pct, expectedMonthProgressPct());
+        return (
+          <section className="mt-5 rounded-3xl bg-primary p-6 text-primary-foreground shadow-elevated">
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-semibold uppercase tracking-wider opacity-80">Dinheiro no seu bolso</p>
+              <StatusBadge status={goalStatus} className="bg-white/15 text-current" />
+            </div>
+            <p className="mt-2 text-[40px] font-bold tracking-tight">{fmtBRL(goal.monthlyProfitGoal)}</p>
+            <p className="mt-1 text-[13px] opacity-80">por mês · {pct.toFixed(0)}% atingido</p>
+          </section>
+        );
+      })()}
 
       <section className="mt-5 rounded-3xl surface p-5 shadow-card">
         <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Faturamento diário necessário</p>
