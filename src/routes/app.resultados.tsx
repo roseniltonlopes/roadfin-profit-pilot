@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { store, fmtBRL, usePersisted, type Goal } from "@/lib/roadfin-store";
 import { ChevronDown, TrendingUp } from "lucide-react";
+import { getProfitStatus, getGoalStatus, getMarginStatus, getDayStatus, expectedMonthProgressPct } from "@/lib/status";
+import { StatusBadge, StatusDot, statusBgClass } from "@/components/roadfin/StatusBadge";
 
 export const Route = createFileRoute("/app/resultados")({
   component: ResultsPage,
