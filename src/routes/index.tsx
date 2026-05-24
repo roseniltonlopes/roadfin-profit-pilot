@@ -7,7 +7,7 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
   head: () => ({
     meta: [
-      { title: "RoadFin — Seu lucro na direção certa" },
+      { title: "RoadFin — O controle financeiro do motorista moderno." },
       { name: "description", content: "Plataforma financeira premium para motoristas de aplicativo." },
     ],
   }),
