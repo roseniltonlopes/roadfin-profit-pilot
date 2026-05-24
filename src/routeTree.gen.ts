@@ -9,38 +9,192 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AssinaturaRouteImport } from './routes/assinatura'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as OnboardingVeiculoRouteImport } from './routes/onboarding.veiculo'
+import { Route as OnboardingMetaRouteImport } from './routes/onboarding.meta'
+import { Route as AuthEmailRouteImport } from './routes/auth.email'
+import { Route as AuthCriarRouteImport } from './routes/auth.criar'
+import { Route as AppVeiculoRouteImport } from './routes/app.veiculo'
+import { Route as AppResultadosRouteImport } from './routes/app.resultados'
+import { Route as AppRegistrarRouteImport } from './routes/app.registrar'
+import { Route as AppMetaRouteImport } from './routes/app.meta'
 
+const AssinaturaRoute = AssinaturaRouteImport.update({
+  id: '/assinatura',
+  path: '/assinatura',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const OnboardingVeiculoRoute = OnboardingVeiculoRouteImport.update({
+  id: '/onboarding/veiculo',
+  path: '/onboarding/veiculo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingMetaRoute = OnboardingMetaRouteImport.update({
+  id: '/onboarding/meta',
+  path: '/onboarding/meta',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthEmailRoute = AuthEmailRouteImport.update({
+  id: '/auth/email',
+  path: '/auth/email',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCriarRoute = AuthCriarRouteImport.update({
+  id: '/auth/criar',
+  path: '/auth/criar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppVeiculoRoute = AppVeiculoRouteImport.update({
+  id: '/veiculo',
+  path: '/veiculo',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppResultadosRoute = AppResultadosRouteImport.update({
+  id: '/resultados',
+  path: '/resultados',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRegistrarRoute = AppRegistrarRouteImport.update({
+  id: '/registrar',
+  path: '/registrar',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMetaRoute = AppMetaRouteImport.update({
+  id: '/meta',
+  path: '/meta',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/assinatura': typeof AssinaturaRoute
+  '/app/meta': typeof AppMetaRoute
+  '/app/registrar': typeof AppRegistrarRoute
+  '/app/resultados': typeof AppResultadosRoute
+  '/app/veiculo': typeof AppVeiculoRoute
+  '/auth/criar': typeof AuthCriarRoute
+  '/auth/email': typeof AuthEmailRoute
+  '/onboarding/meta': typeof OnboardingMetaRoute
+  '/onboarding/veiculo': typeof OnboardingVeiculoRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assinatura': typeof AssinaturaRoute
+  '/app/meta': typeof AppMetaRoute
+  '/app/registrar': typeof AppRegistrarRoute
+  '/app/resultados': typeof AppResultadosRoute
+  '/app/veiculo': typeof AppVeiculoRoute
+  '/auth/criar': typeof AuthCriarRoute
+  '/auth/email': typeof AuthEmailRoute
+  '/onboarding/meta': typeof OnboardingMetaRoute
+  '/onboarding/veiculo': typeof OnboardingVeiculoRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/assinatura': typeof AssinaturaRoute
+  '/app/meta': typeof AppMetaRoute
+  '/app/registrar': typeof AppRegistrarRoute
+  '/app/resultados': typeof AppResultadosRoute
+  '/app/veiculo': typeof AppVeiculoRoute
+  '/auth/criar': typeof AuthCriarRoute
+  '/auth/email': typeof AuthEmailRoute
+  '/onboarding/meta': typeof OnboardingMetaRoute
+  '/onboarding/veiculo': typeof OnboardingVeiculoRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/assinatura'
+    | '/app/meta'
+    | '/app/registrar'
+    | '/app/resultados'
+    | '/app/veiculo'
+    | '/auth/criar'
+    | '/auth/email'
+    | '/onboarding/meta'
+    | '/onboarding/veiculo'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/assinatura'
+    | '/app/meta'
+    | '/app/registrar'
+    | '/app/resultados'
+    | '/app/veiculo'
+    | '/auth/criar'
+    | '/auth/email'
+    | '/onboarding/meta'
+    | '/onboarding/veiculo'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/assinatura'
+    | '/app/meta'
+    | '/app/registrar'
+    | '/app/resultados'
+    | '/app/veiculo'
+    | '/auth/criar'
+    | '/auth/email'
+    | '/onboarding/meta'
+    | '/onboarding/veiculo'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  AssinaturaRoute: typeof AssinaturaRoute
+  AuthCriarRoute: typeof AuthCriarRoute
+  AuthEmailRoute: typeof AuthEmailRoute
+  OnboardingMetaRoute: typeof OnboardingMetaRoute
+  OnboardingVeiculoRoute: typeof OnboardingVeiculoRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/assinatura': {
+      id: '/assinatura'
+      path: '/assinatura'
+      fullPath: '/assinatura'
+      preLoaderRoute: typeof AssinaturaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +202,99 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/onboarding/veiculo': {
+      id: '/onboarding/veiculo'
+      path: '/onboarding/veiculo'
+      fullPath: '/onboarding/veiculo'
+      preLoaderRoute: typeof OnboardingVeiculoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding/meta': {
+      id: '/onboarding/meta'
+      path: '/onboarding/meta'
+      fullPath: '/onboarding/meta'
+      preLoaderRoute: typeof OnboardingMetaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/email': {
+      id: '/auth/email'
+      path: '/auth/email'
+      fullPath: '/auth/email'
+      preLoaderRoute: typeof AuthEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/criar': {
+      id: '/auth/criar'
+      path: '/auth/criar'
+      fullPath: '/auth/criar'
+      preLoaderRoute: typeof AuthCriarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/veiculo': {
+      id: '/app/veiculo'
+      path: '/veiculo'
+      fullPath: '/app/veiculo'
+      preLoaderRoute: typeof AppVeiculoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/resultados': {
+      id: '/app/resultados'
+      path: '/resultados'
+      fullPath: '/app/resultados'
+      preLoaderRoute: typeof AppResultadosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/registrar': {
+      id: '/app/registrar'
+      path: '/registrar'
+      fullPath: '/app/registrar'
+      preLoaderRoute: typeof AppRegistrarRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/meta': {
+      id: '/app/meta'
+      path: '/meta'
+      fullPath: '/app/meta'
+      preLoaderRoute: typeof AppMetaRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppMetaRoute: typeof AppMetaRoute
+  AppRegistrarRoute: typeof AppRegistrarRoute
+  AppResultadosRoute: typeof AppResultadosRoute
+  AppVeiculoRoute: typeof AppVeiculoRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppMetaRoute: AppMetaRoute,
+  AppRegistrarRoute: AppRegistrarRoute,
+  AppResultadosRoute: AppResultadosRoute,
+  AppVeiculoRoute: AppVeiculoRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  AssinaturaRoute: AssinaturaRoute,
+  AuthCriarRoute: AuthCriarRoute,
+  AuthEmailRoute: AuthEmailRoute,
+  OnboardingMetaRoute: OnboardingMetaRoute,
+  OnboardingVeiculoRoute: OnboardingVeiculoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
