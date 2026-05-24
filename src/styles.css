@@ -42,6 +42,19 @@
   --color-ring: var(--ring);
   --color-surface: var(--surface);
   --color-surface-elevated: var(--surface-elevated);
+
+  --color-status-positive: var(--status-positive);
+  --color-status-positive-foreground: var(--status-positive-foreground);
+  --color-status-positive-soft: var(--status-positive-soft);
+  --color-status-warning: var(--status-warning);
+  --color-status-warning-foreground: var(--status-warning-foreground);
+  --color-status-warning-soft: var(--status-warning-soft);
+  --color-status-negative: var(--status-negative);
+  --color-status-negative-foreground: var(--status-negative-foreground);
+  --color-status-negative-soft: var(--status-negative-soft);
+  --color-status-neutral: var(--status-neutral);
+  --color-status-neutral-foreground: var(--status-neutral-foreground);
+  --color-status-neutral-soft: var(--status-neutral-soft);
 }
 
 :root {
