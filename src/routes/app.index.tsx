@@ -3,6 +3,8 @@ import { Bell, Play, Calculator, CalendarOff, Plus, Sparkles } from "lucide-reac
 import { ThemeToggle } from "@/components/roadfin/ThemeToggle";
 import { Logo } from "@/components/roadfin/Logo";
 import { usePersisted, type User, fmtBRL, store } from "@/lib/roadfin-store";
+import { getProfitStatus } from "@/lib/status";
+import { StatusBadge, statusBgClass } from "@/components/roadfin/StatusBadge";
 
 export const Route = createFileRoute("/app/")({
   component: TodayPage,
