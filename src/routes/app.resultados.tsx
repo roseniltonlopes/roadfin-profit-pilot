@@ -53,7 +53,10 @@ function ResultsPage() {
     .reduce((s, l) => s + l.netProfit, 0);
   const pct = monthlyGoal > 0 ? Math.min(100, (monthProfit / monthlyGoal) * 100) : 0;
   const daysLeft = endOfMonth().getDate() - new Date().getDate();
-  const onTrack = pct >= (1 - daysLeft / 30) * 100;
+  const expectedPct = expectedMonthProgressPct();
+  const goalStatus = monthlyGoal > 0 ? getGoalStatus(pct, expectedPct) : "neutral";
+  const profitStatus = getProfitStatus(totals.profit, totals.gross);
+  const marginStatus = getMarginStatus(margin);
 
   return (
     <main className="px-5 pt-6 safe-top">
