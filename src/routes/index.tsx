@@ -44,7 +44,7 @@ function LandingPage() {
             Assuma o controle dos seus ganhos
           </p>
           <h1 className="mt-4 text-[34px] font-bold leading-[1.05] tracking-tight">
-            Seu lucro na <br /> direção certa.
+            O controle financeiro do <span className="text-primary">motorista moderno</span>.
           </h1>
           <p className="mt-4 text-[15px] text-muted-foreground">
             Veja quanto realmente sobra no seu bolso depois de tudo.
