@@ -71,12 +71,13 @@ function TodayPage() {
         </Link>
       )}
 
-      <section className="mt-5 rounded-3xl bg-primary p-6 text-primary-foreground shadow-elevated">
-        <p className="text-[11px] font-semibold uppercase tracking-wider opacity-80">Lucro real de hoje</p>
+      <section className={`mt-5 rounded-3xl p-6 shadow-elevated ${statusBgClass(dayStatus)}`}>
+        <div className="flex items-center justify-between">
+          <p className="text-[11px] font-semibold uppercase tracking-wider opacity-80">Lucro real de hoje</p>
+          <StatusBadge status={dayStatus} className="bg-white/15 text-current" showIcon />
+        </div>
         <p className="mt-2 text-[40px] font-bold leading-none tracking-tight">{fmtBRL(todayProfit)}</p>
-        <p className="mt-2 text-[13px] opacity-80">
-          {todayProfit > 0 ? "Você está no ritmo certo." : "Lance sua primeira jornada para ver o resultado."}
-        </p>
+        <p className="mt-2 text-[13px] opacity-80">{dayMessages[dayStatus]}</p>
       </section>
 
       <section className="mt-5 space-y-3">
