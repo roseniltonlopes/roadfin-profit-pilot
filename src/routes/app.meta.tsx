@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { usePersisted, type Goal, fmtBRL } from "@/lib/roadfin-store";
+import { usePersisted, type Goal, fmtBRL, store } from "@/lib/roadfin-store";
 import { Target, Pencil } from "lucide-react";
+import { getGoalStatus, expectedMonthProgressPct } from "@/lib/status";
+import { StatusBadge } from "@/components/roadfin/StatusBadge";
 
 export const Route = createFileRoute("/app/meta")({
   component: GoalPage,
