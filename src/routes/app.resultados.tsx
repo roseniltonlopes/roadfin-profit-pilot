@@ -74,10 +74,13 @@ function ResultsPage() {
         ))}
       </div>
 
-      <section className="mt-5 rounded-3xl bg-primary p-6 text-primary-foreground shadow-elevated">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-foreground/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider">
-          <TrendingUp className="h-3 w-3" /> Resultado de lucro real
-        </span>
+      <section className={`mt-5 rounded-3xl p-6 shadow-elevated ${statusBgClass(profitStatus)}`}>
+        <div className="flex items-center justify-between">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider">
+            <TrendingUp className="h-3 w-3" /> Resultado de lucro real
+          </span>
+          <StatusBadge status={profitStatus} className="bg-white/15 text-current" />
+        </div>
         <p className="mt-3 text-[11px] font-semibold uppercase tracking-wider opacity-80">Lucro Real</p>
         <p className="mt-1 text-[40px] font-bold tracking-tight">{fmtBRL(totals.profit)}</p>
       </section>
@@ -85,7 +88,7 @@ function ResultsPage() {
       <section className="mt-5 grid grid-cols-2 gap-3">
         <Kpi label="Horas trabalhadas" value={`${totals.hours.toFixed(1)}h`} />
         <Kpi label="Ganho / hora" value={fmtBRL(perHour)} />
-        <Kpi label="Margem de lucro" value={`${margin.toFixed(1)}%`} />
+        <Kpi label="Margem de lucro" value={`${margin.toFixed(1)}%`} badge={<StatusBadge status={marginStatus} />} />
         <Kpi label="Ganho / KM" value={fmtBRL(perKm)} />
       </section>
 
@@ -93,10 +96,20 @@ function ResultsPage() {
         <section className="mt-5 rounded-3xl surface p-5 shadow-card">
           <div className="flex items-center justify-between">
             <p className="text-[13px] font-semibold text-muted-foreground">Objetivo mensal</p>
-            <p className="text-[13px] font-bold text-primary">{pct.toFixed(0)}%</p>
+            <div className="flex items-center gap-2">
+              <StatusBadge status={goalStatus} />
+              <p className="text-[13px] font-bold">{pct.toFixed(0)}%</p>
+            </div>
           </div>
           <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
-            <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} />
+            <div
+              className={`h-full rounded-full transition-all ${
+                goalStatus === "positive" ? "bg-status-positive" :
+                goalStatus === "warning" ? "bg-status-warning" :
+                goalStatus === "negative" ? "bg-status-negative" : "bg-status-neutral"
+              }`}
+              style={{ width: `${pct}%` }}
+            />
           </div>
           <div className="mt-4 flex items-end justify-between">
             <div>
@@ -109,7 +122,11 @@ function ResultsPage() {
             </div>
           </div>
           <p className="mt-3 text-[13px] text-muted-foreground">
-            {daysLeft} dias restantes. {onTrack ? "Você está no ritmo certo. 👏" : "Hora de acelerar. 🚀"}
+            {daysLeft} dias restantes. {
+              goalStatus === "positive" ? "Você está no ritmo certo. 👏" :
+              goalStatus === "warning" ? "Atenção: ritmo abaixo do esperado." :
+              "Hora de acelerar. 🚀"
+            }
           </p>
         </section>
       )}
