@@ -140,15 +140,25 @@ function ResultsPage() {
 
       <Expandable title="Registros" value={`${filtered.length}`}>
         {filtered.length === 0 && <p className="px-1 py-3 text-[13px] text-muted-foreground">Nenhum registro neste período.</p>}
-        {filtered.map((l) => (
-          <div key={l.id} className="flex items-center justify-between py-3">
-            <div>
-              <p className="text-[14px] font-semibold">{new Date(l.date).toLocaleDateString("pt-BR")}</p>
-              <p className="text-[12px] text-muted-foreground">{l.hoursWorked.toFixed(1)}h · {l.kmDriven} km</p>
+        {filtered.map((l) => {
+          const s = getDayStatus(l);
+          return (
+            <div key={l.id} className="flex items-center justify-between py-3">
+              <div className="flex items-center gap-3">
+                <StatusDot status={s} />
+                <div>
+                  <p className="text-[14px] font-semibold">{new Date(l.date).toLocaleDateString("pt-BR")}</p>
+                  <p className="text-[12px] text-muted-foreground">{l.hoursWorked.toFixed(1)}h · {l.kmDriven} km</p>
+                </div>
+              </div>
+              <p className={`text-[15px] font-bold ${
+                s === "negative" ? "text-status-negative" :
+                s === "warning" ? "text-status-warning" :
+                s === "positive" ? "text-status-positive" : "text-status-neutral"
+              }`}>{fmtBRL(l.netProfit)}</p>
             </div>
-            <p className="text-[15px] font-bold text-primary">{fmtBRL(l.netProfit)}</p>
-          </div>
-        ))}
+          );
+        })}
       </Expandable>
     </main>
   );
