@@ -23,6 +23,14 @@ function TodayPage() {
 
   const logsToday = store.getLogs().filter((l) => l.date === new Date().toISOString().slice(0, 10));
   const todayProfit = logsToday.reduce((s, l) => s + l.netProfit, 0);
+  const todayGross = logsToday.reduce((s, l) => s + l.grossRevenue, 0);
+  const dayStatus = logsToday.length === 0 ? "neutral" : getProfitStatus(todayProfit, todayGross);
+  const dayMessages: Record<typeof dayStatus, string> = {
+    positive: "Você está no ritmo certo. 👏",
+    warning: "Atenção: margem apertada hoje.",
+    negative: "Hoje fechou no prejuízo. Vamos analisar.",
+    neutral: "Lance sua primeira jornada para ver o resultado.",
+  };
 
   return (
     <main className="px-5 pt-6 safe-top">
