@@ -90,6 +90,21 @@
   --input: oklch(0.955 0.003 80);
   --ring: var(--green-primary);
 
+  /* Status semáforo */
+  --status-positive: var(--green-primary);
+  --status-positive-foreground: var(--black-premium);
+  --status-positive-soft: oklch(0.78 0.22 138 / 0.14);
+  --status-warning: oklch(0.78 0.14 80);          /* #F5B93F */
+  --status-warning-foreground: oklch(0.2 0.04 70);
+  --status-warning-soft: oklch(0.78 0.14 80 / 0.16);
+  --status-negative: oklch(0.65 0.22 25);         /* #EF4444 */
+  --status-negative-foreground: oklch(1 0 0);
+  --status-negative-soft: oklch(0.65 0.22 25 / 0.14);
+  --status-neutral: oklch(0.55 0.02 260);         /* #6B7280 */
+  --status-neutral-foreground: oklch(1 0 0);
+  --status-neutral-soft: oklch(0.55 0.02 260 / 0.14);
+
+
   --shadow-card: 0 1px 2px oklch(0.156 0.005 60 / 0.04), 0 8px 24px oklch(0.156 0.005 60 / 0.06);
   --shadow-elevated: 0 4px 12px oklch(0.156 0.005 60 / 0.08), 0 24px 48px oklch(0.156 0.005 60 / 0.10);
   --glow-primary: 0 0 0 6px oklch(0.78 0.22 138 / 0.12);
