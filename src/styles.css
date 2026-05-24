@@ -134,6 +134,20 @@
   --input: oklch(1 0 0 / 6%);
   --ring: var(--green-primary);
 
+  /* Status semáforo (dark) */
+  --status-positive: var(--green-primary);
+  --status-positive-foreground: var(--black-premium);
+  --status-positive-soft: oklch(0.78 0.22 138 / 0.20);
+  --status-warning: oklch(0.82 0.15 80);
+  --status-warning-foreground: oklch(0.18 0.04 70);
+  --status-warning-soft: oklch(0.82 0.15 80 / 0.22);
+  --status-negative: oklch(0.68 0.22 25);
+  --status-negative-foreground: oklch(1 0 0);
+  --status-negative-soft: oklch(0.68 0.22 25 / 0.22);
+  --status-neutral: oklch(0.7 0.02 260);
+  --status-neutral-foreground: var(--black-premium);
+  --status-neutral-soft: oklch(0.7 0.02 260 / 0.20);
+
   --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4), 0 8px 24px oklch(0 0 0 / 0.3);
   --shadow-elevated: 0 4px 12px oklch(0 0 0 / 0.5), 0 24px 48px oklch(0 0 0 / 0.4);
   --glow-primary: 0 0 24px oklch(0.78 0.22 138 / 0.25);
