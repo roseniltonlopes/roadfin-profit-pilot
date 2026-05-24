@@ -1,6 +1,15 @@
-Substituir o slogan atual "Seu lucro na direção certa" pelo novo "RoadFin — O controle financeiro do motorista moderno." em:
+## Plano
 
-1. `src/routes/__root.tsx` — meta title e og:title
-2. `src/routes/index.tsx` — page title e texto visível no hero da landing page
+### 1. Diminuir espaçamento entre logo e primeiro texto
+- Arquivo: `src/routes/index.tsx`
+- Alterar o `mt-16` (64px) da div do texto para um valor menor (ex: `mt-8` ou `mt-10`), reduzindo a distância entre a logo e o bloco de texto "Assuma o controle dos seus ganhos".
 
-Técnico: busca e substituição direta de string, sem mudanças de estrutura ou estilo.
+### 2. Restaurar cor original do "G" do Google
+- Arquivo: `src/routes/index.tsx`
+- Substituir o SVG monócromo (vermelho) do `GoogleIcon` pelo SVG oficial colorido do Google, com os 4 caminhos nas cores corretas:
+  - Azul: `#4285F4`
+  - Vermelho: `#EA4335`
+  - Amarelo: `#FBBC05`
+  - Verde: `#34A853`
+
+Nenhuma outra alteração estrutural necessária.
