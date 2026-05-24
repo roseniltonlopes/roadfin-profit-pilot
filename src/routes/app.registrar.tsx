@@ -2,6 +2,8 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, X } from "lucide-react";
 import { store, computeLog, fmtBRL, type Vehicle } from "@/lib/roadfin-store";
+import { getProfitStatus } from "@/lib/status";
+import { StatusBadge, statusBgClass } from "@/components/roadfin/StatusBadge";
 import { NumberField, StepShell, TextField } from "../routes/onboarding.veiculo";
 
 export const Route = createFileRoute("/app/registrar")({
