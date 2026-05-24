@@ -154,11 +154,12 @@ function ResultsPage() {
   );
 }
 
-function Kpi({ label, value }: { label: string; value: string }) {
+function Kpi({ label, value, badge }: { label: string; value: string; badge?: React.ReactNode }) {
   return (
     <div className="rounded-2xl surface p-4 shadow-card">
       <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
       <p className="mt-2 text-[20px] font-bold">{value}</p>
+      {badge && <div className="mt-2">{badge}</div>}
     </div>
   );
 }
