@@ -35,8 +35,8 @@ function LandingPage() {
       </div>
 
       <div className="mx-auto flex min-h-screen max-w-md flex-col px-6 pb-10 pt-16 safe-top">
-        <div className="flex justify-center">
-          <Logo size={56} />
+        <div className="flex justify-center animate-in fade-in zoom-in-90 duration-700">
+          <Logo size={96} impact />
         </div>
 
         <div className="mt-16 text-center">

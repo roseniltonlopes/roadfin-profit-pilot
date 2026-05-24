@@ -25,7 +25,7 @@ function TodayPage() {
   return (
     <main className="px-5 pt-6 safe-top">
       <header className="flex items-center justify-between">
-        <Logo size={36} />
+        <Logo size={52} />
         <div className="flex items-center gap-2">
           <button className="grid h-10 w-10 place-items-center rounded-full surface shadow-card">
             <Bell className="h-5 w-5" />

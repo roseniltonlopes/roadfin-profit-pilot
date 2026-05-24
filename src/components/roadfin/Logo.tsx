@@ -3,18 +3,21 @@ import logoSrc from "@/assets/roadfin-logo-light.png";
 type Props = {
   size?: number;
   withWordmark?: boolean;
+  impact?: boolean;
 };
 
 /**
  * Logo oficial RoadFin.
- * - `size` controla a ALTURA da logo (proporção mantida ~16:10).
+ * - `size` controla a ALTURA da logo (proporção mantida).
  * - `withWordmark`: quando false, exibe apenas o ícone do carro recortado.
- * No tema escuro, a logo é exibida sobre uma pílula clara para preservar
- * legibilidade da palavra "Road" (preta na arte oficial).
+ * - `impact`: quando true, aplica halo/glow verde para máxima presença.
  */
-export function Logo({ size = 40, withWordmark = true }: Props) {
+export function Logo({ size = 40, withWordmark = true, impact = false }: Props) {
+  const glow = impact
+    ? "drop-shadow(0 0 24px rgba(99,215,42,0.55)) drop-shadow(0 8px 28px rgba(99,215,42,0.25))"
+    : undefined;
+
   if (!withWordmark) {
-    // Ícone-only: recorta apenas a porção do carro usando object-position.
     return (
       <div
         className="overflow-hidden"
@@ -31,6 +34,7 @@ export function Logo({ size = 40, withWordmark = true }: Props) {
             objectFit: "cover",
             objectPosition: "center top",
             marginTop: -size * 0.1,
+            filter: glow,
           }}
           draggable={false}
         />
@@ -44,7 +48,7 @@ export function Logo({ size = 40, withWordmark = true }: Props) {
       alt="RoadFin"
       draggable={false}
       className="select-none object-contain dark:rounded-2xl dark:bg-white dark:px-3 dark:py-1.5"
-      style={{ height: size, width: "auto" }}
+      style={{ height: size, width: "auto", filter: glow }}
     />
   );
 }
