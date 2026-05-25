@@ -19,6 +19,7 @@ metas financeiras sustentáveis
 O objetivo do projeto é transformar dados financeiros do motorista em informações simples e visuais para tomada de decisão diária.
 
 🚀 Objetivos do app
+
 Controlar ganhos diários
 Registrar despesas operacionais
 Calcular lucro líquido real
@@ -27,7 +28,9 @@ Acompanhar combustível e manutenção
 Criar metas financeiras
 Gerar indicadores inteligentes
 Facilitar gestão financeira para motoristas de app
+
 🛠️ Tecnologias utilizadas
+
 Frontend Mobile
 React Native
 Expo
@@ -46,6 +49,7 @@ VS Code
 GitHub
 Lovable (aceleração do MVP)
 ChatGPT (auxílio em validações e estruturação)
+
 📊 Indicadores do projeto
 
 O aplicativo trabalha com métricas importantes para gestão financeira do motorista:
@@ -59,6 +63,7 @@ Ganho por hora
 Meta diária
 Reserva de manutenção
 Depreciação estimada do veículo
+
 🧠 Visão do projeto
 
 O foco principal do RoadFin não é apenas desenvolvimento de software, mas sim:
@@ -72,6 +77,7 @@ modelagem de informações
 indicadores financeiros
 visualização estratégica
 usabilidade simples
+
 📱 Status do projeto
 
 🚧 Em desenvolvimento (MVP)
@@ -84,6 +90,7 @@ relatórios inteligentes
 integração com Power BI
 exportação de dados
 notificações e metas
+
 📂 Estrutura do projeto
 src/
 ├── components/
@@ -94,6 +101,7 @@ src/
 ├── types/
 ├── assets/
 └── database/
+
 📈 Diferencial do projeto
 
 O RoadFin foi criado com foco em resolver um problema real do mercado utilizando:
