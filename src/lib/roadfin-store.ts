@@ -59,7 +59,11 @@ const KEYS = {
   goal: "roadfin.goal",
   logs: "roadfin.logs",
   theme: "roadfin.theme",
+  shift: "roadfin.shift",
 } as const;
+
+export type Shift = { startedAt: string };
+
 
 function read<T>(key: string): T | null {
   if (typeof window === "undefined") return null;
