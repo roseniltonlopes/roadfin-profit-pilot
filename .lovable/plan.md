@@ -1,62 +1,59 @@
-## Sistema visual de status financeiro (semáforo)
+## Objetivo
 
-Implementar uma linguagem visual unificada baseada em semáforo (verde / amarelo / vermelho / cinza) em todo o RoadFin, mantendo o visual premium e minimalista.
+Ativar os três botões da tela `/app` que hoje são apenas visuais (sem `onClick`).
 
-### 1. Tokens de cor (src/styles.css)
+---
 
-Adicionar tokens semânticos de status, em `oklch`, para light e dark mode:
+## 1. Iniciar Turno — timer no card "Hoje"
 
-- `--status-positive` / `--status-positive-foreground` / `--status-positive-soft` (verde — já é a `--primary`, mas exposto como `status-positive` para deixar a intenção explícita)
-- `--status-warning` / `--status-warning-foreground` / `--status-warning-soft` (amarelo `#F5B93F`)
-- `--status-negative` / `--status-negative-foreground` / `--status-negative-soft` (vermelho `#EF4444`)
-- `--status-neutral` / `--status-neutral-foreground` / `--status-neutral-soft` (cinza `#6B7280`)
+**Persistência (em `src/lib/roadfin-store.ts`):**
+- Nova chave `roadfin.shift` guardando `{ startedAt: string } | null`.
+- Helpers: `store.getShift()`, `store.startShift()`, `store.endShift()`.
 
-Cada cor terá uma variante "soft" (background suave ~ 12% alpha) usada em chips/badges, e uma variante sólida para textos/ícones. Registrar no `@theme inline` como `--color-status-*` para gerar utilitários Tailwind (`bg-status-positive`, `text-status-warning`, etc.).
+**UI em `src/routes/app.index.tsx`:**
+- O `ActionCard` "Iniciar Turno" vira um botão real:
+  - Sem turno ativo → texto "Iniciar Turno", ao clicar grava `startedAt = now`.
+  - Com turno ativo → vira "Encerrar Turno" (ícone `Square`, accent vermelho via `bg-status-negative-soft`).
+- No card "Lucro real de hoje", quando há turno ativo, mostra um chip com o tempo decorrido `HH:MM:SS` atualizado a cada 1s via `setInterval` em `useEffect`.
+- Ao encerrar, redireciona para `/app/registrar?hours=<decimal>` (pré-preencher horas, opcional — apenas se já existir esse parâmetro lá; caso contrário, só limpa o estado).
 
-### 2. Helper de classificação (src/lib/status.ts — novo)
+---
 
-Função pura que recebe contexto financeiro e devolve um status:
+## 2. Folga / Manutenção — modal de escolha
 
-```ts
-export type FinancialStatus = "positive" | "warning" | "negative" | "neutral";
+**Novo componente** `src/components/roadfin/DayOffModal.tsx`:
+- Usa `Dialog` do shadcn já presente no projeto.
+- Duas opções grandes lado a lado:
+  - **Folga** → grava um `WorkLog` do dia atual com receitas zeradas e `kmDriven=0, hoursWorked=0` (apenas custos fixos do dia computados via `computeLog`). Mensagem de confirmação.
+  - **Manutenção** → mostra um campo numérico ("Valor gasto R$"); ao confirmar, grava um `WorkLog` com receita 0, km 0, e o valor entra como `otherRevenue` negativo (ou novo campo `extraCost` adicionado ao input do `computeLog`). Para manter o store simples, será somado como custo extra empurrando para `dailyExpenses` daquele log.
 
-getProfitStatus(netProfit, grossRevenue)        // margem
-getGoalStatus(progressPct, daysElapsedPct)      // ritmo da meta
-getMarginStatus(marginPct)                       // >20% verde, 5-20% amarelo, <5% vermelho, sem dados cinza
-getDayStatus(log)                                // dia bom/atenção/prejuízo
-```
+No `app.index.tsx`, o `ActionCard` "Folga / Manutenção" abre esse modal.
 
-Regras de classificação (resumo):
-- **Lucro do dia**: >0 e margem ≥ 20% = positive; >0 e margem 5–20% = warning; ≤0 = negative; sem log = neutral.
-- **Meta mensal**: progresso ≥ ritmo esperado = positive; entre 70–100% do ritmo = warning; <70% = negative; sem meta = neutral.
-- **Margem geral**: ≥20% positive; 5–20% warning; <5% negative.
+---
 
-### 3. Componente `<StatusBadge />` (src/components/roadfin/StatusBadge.tsx — novo)
+## 3. Calculadora — modal de preço sugerido
 
-Chip pequeno e refinado (rounded-full, soft background + texto sólido + ícone opcional `lucide-react`). Variantes pelas 4 cores. Tamanhos `sm` / `md`.
+**Novo componente** `src/components/roadfin/PriceCalculatorModal.tsx`:
+- `Dialog` com inputs:
+  - KM da corrida
+  - Tempo estimado (min)
+  - Margem alvo (% — default 30)
+- Calcula:
+  - `custo = (km / fuelConsumption) * fuelPrice + km * (maintenancePerKm + depreciationPerKm)`
+  - `precoSugerido = custo / (1 - margem/100)`
+- Mostra cartão de resultado com custo, preço sugerido e lucro estimado, colorido via `StatusBadge`.
+- Se não houver `vehicle` cadastrado, exibe CTA para `/app/perfil` (ou rota equivalente de veículo).
+- Não persiste nada.
 
-### 4. Aplicação nas telas
+No `app.index.tsx`, o `ActionCard` "Calculadora" abre esse modal.
 
-- **app/index (Hoje)** — card "Lucro real de hoje" muda de cor (verde / amarelo / vermelho / neutro) conforme `getDayStatus`. Texto secundário ajusta a mensagem.
-- **app/resultados** — card grande de "Lucro Real" colorido conforme status; barra de progresso da meta com cor de `getGoalStatus`; KPI "Margem de lucro" com `StatusBadge`.
-- **app/meta** — card "Dinheiro no seu bolso" mantém destaque, mas indicador adicional de ritmo (badge) usando `getGoalStatus`.
-- **app/registrar** — ao computar preview do log, mostrar `StatusBadge` do resultado.
-- **Listagem de registros (resultados expandable)** — pequeno dot colorido por log (`getDayStatus`).
+---
 
-### 5. Critério de "não regredir o visual"
+## Arquivos afetados
 
-- Cards principais continuam usando `bg-primary` quando o status é positive (verde já é a cor primária). Apenas trocamos para `bg-status-warning` / `bg-status-negative` / `bg-status-neutral` quando o status muda.
-- Sem cores hard-coded em componentes — tudo via tokens.
-- Dark mode coberto com o mesmo conjunto de tokens.
+- `src/lib/roadfin-store.ts` — adicionar shift helpers.
+- `src/routes/app.index.tsx` — handlers, estado dos modais, timer.
+- `src/components/roadfin/DayOffModal.tsx` (novo).
+- `src/components/roadfin/PriceCalculatorModal.tsx` (novo).
 
-### Arquivos afetados
-
-- `src/styles.css` (tokens)
-- `src/lib/status.ts` (novo)
-- `src/components/roadfin/StatusBadge.tsx` (novo)
-- `src/routes/app.index.tsx`
-- `src/routes/app.resultados.tsx`
-- `src/routes/app.meta.tsx`
-- `src/routes/app.registrar.tsx`
-
-Nenhuma alteração em lógica de negócio/cálculo — apenas leitura dos valores existentes para colorir a UI.
+Sem mudanças nas demais rotas e sem alterações de design tokens.
