@@ -155,13 +155,19 @@ function greetingFor(d: Date) {
   return "Boa noite";
 }
 
-function ActionCard({ icon: Icon, title, desc, accent, small }: { icon: typeof Play; title: string; desc: string; accent?: boolean; small?: boolean }) {
+function ActionCard({ icon: Icon, title, desc, accent, small, danger, onClick }: { icon: typeof Play; title: string; desc: string; accent?: boolean; small?: boolean; danger?: boolean; onClick?: () => void }) {
+  const iconBg = danger
+    ? "bg-status-negative text-status-negative-foreground"
+    : accent
+    ? "bg-primary text-primary-foreground"
+    : "bg-muted text-foreground";
   return (
     <button
-      className={`flex w-full items-start gap-3 rounded-3xl p-5 text-left shadow-card transition-transform active:scale-[0.99] ${accent ? "surface ring-1 ring-primary/30" : "surface"} ${small ? "p-4" : ""}`}
+      onClick={onClick}
+      className={`flex w-full items-start gap-3 rounded-3xl p-5 text-left shadow-card transition-transform active:scale-[0.99] ${accent ? "surface ring-1 ring-primary/30" : "surface"} ${small ? "p-4" : ""} ${danger ? "ring-1 ring-status-negative/40" : ""}`}
     >
-      <span className={`grid place-items-center rounded-2xl ${accent ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"} ${small ? "h-10 w-10" : "h-12 w-12"}`}>
-        <Icon className={small ? "h-5 w-5" : "h-5 w-5"} />
+      <span className={`grid place-items-center rounded-2xl ${iconBg} ${small ? "h-10 w-10" : "h-12 w-12"}`}>
+        <Icon className="h-5 w-5" />
       </span>
       <div className="flex-1">
         <div className={`font-semibold ${small ? "text-[14px]" : "text-[16px]"}`}>{title}</div>
@@ -170,3 +176,4 @@ function ActionCard({ icon: Icon, title, desc, accent, small }: { icon: typeof P
     </button>
   );
 }
+
