@@ -59,7 +59,11 @@ const KEYS = {
   goal: "roadfin.goal",
   logs: "roadfin.logs",
   theme: "roadfin.theme",
+  shift: "roadfin.shift",
 } as const;
+
+export type Shift = { startedAt: string };
+
 
 function read<T>(key: string): T | null {
   if (typeof window === "undefined") return null;
@@ -116,7 +120,11 @@ export const store = {
       store.getLogs().filter((l) => l.id !== id),
     );
   },
+  getShift: () => read<Shift>(KEYS.shift),
+  startShift: () => write<Shift>(KEYS.shift, { startedAt: new Date().toISOString() }),
+  endShift: () => write<Shift | null>(KEYS.shift, null),
 };
+
 
 export const KEYS_EXPORT = KEYS;
 
