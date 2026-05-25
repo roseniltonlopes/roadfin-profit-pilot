@@ -1,14 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, Play, Calculator, CalendarOff, Plus, Sparkles } from "lucide-react";
+import { Bell, Play, Square, Calculator, CalendarOff, Plus, Sparkles, Clock } from "lucide-react";
+import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/roadfin/ThemeToggle";
 import { Logo } from "@/components/roadfin/Logo";
-import { usePersisted, type User, fmtBRL, store } from "@/lib/roadfin-store";
+import { usePersisted, type User, type Shift, fmtBRL, store } from "@/lib/roadfin-store";
 import { getProfitStatus } from "@/lib/status";
 import { StatusBadge, statusBgClass } from "@/components/roadfin/StatusBadge";
+import { DayOffModal } from "@/components/roadfin/DayOffModal";
+import { PriceCalculatorModal } from "@/components/roadfin/PriceCalculatorModal";
 
 export const Route = createFileRoute("/app/")({
   component: TodayPage,
 });
+
 
 function TodayPage() {
   const [user] = usePersisted<User | null>("roadfin.user", null);
