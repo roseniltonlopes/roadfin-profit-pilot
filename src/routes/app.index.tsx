@@ -94,18 +94,34 @@ function TodayPage() {
         </div>
         <p className="mt-2 text-[40px] font-bold leading-none tracking-tight">{fmtBRL(todayProfit)}</p>
         <p className="mt-2 text-[13px] opacity-80">{dayMessages[dayStatus]}</p>
+        {shift && (
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-[12px] font-semibold">
+            <Clock className="h-3.5 w-3.5" />
+            Turno: {formatElapsed(now - new Date(shift.startedAt).getTime())}
+          </div>
+        )}
       </section>
 
       <section className="mt-5 space-y-3">
         <ActionCard
-          icon={Play}
-          title="Iniciar Turno"
-          desc="Clique aqui para iniciar seu turno e monitorar seus ganhos reais por hora."
+          icon={shift ? Square : Play}
+          title={shift ? "Encerrar Turno" : "Iniciar Turno"}
+          desc={shift ? "Finalizar e ir para o registro de ganhos." : "Inicie e monitore seu tempo em tempo real."}
           accent
+          danger={!!shift}
+          onClick={() => {
+            if (shift) {
+              setShift(null);
+              window.location.href = "/app/registrar";
+            } else {
+              store.startShift();
+              setShift({ startedAt: new Date().toISOString() });
+            }
+          }}
         />
         <div className="grid grid-cols-2 gap-3">
-          <ActionCard icon={CalendarOff} title="Folga / Manutenção" desc="Registrar dia sem trabalho" small />
-          <ActionCard icon={Calculator} title="Calculadora" desc="Corrida particular" small />
+          <ActionCard icon={CalendarOff} title="Folga / Manutenção" desc="Registrar dia sem trabalho" small onClick={() => setDayOffOpen(true)} />
+          <ActionCard icon={Calculator} title="Calculadora" desc="Corrida particular" small onClick={() => setCalcOpen(true)} />
         </div>
       </section>
 
@@ -116,9 +132,21 @@ function TodayPage() {
         <Plus className="h-5 w-5" strokeWidth={2.5} />
         Lançar Ganhos
       </Link>
+
+      <DayOffModal open={dayOffOpen} onOpenChange={setDayOffOpen} />
+      <PriceCalculatorModal open={calcOpen} onOpenChange={setCalcOpen} />
     </main>
   );
 }
+
+function formatElapsed(ms: number) {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const h = String(Math.floor(total / 3600)).padStart(2, "0");
+  const m = String(Math.floor((total % 3600) / 60)).padStart(2, "0");
+  const s = String(total % 60).padStart(2, "0");
+  return `${h}:${m}:${s}`;
+}
+
 
 function greetingFor(d: Date) {
   const h = d.getHours();
