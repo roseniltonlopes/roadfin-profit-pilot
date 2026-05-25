@@ -16,6 +16,17 @@ export const Route = createFileRoute("/app/")({
 
 function TodayPage() {
   const [user] = usePersisted<User | null>("roadfin.user", null);
+  const [shift, setShift] = usePersisted<Shift | null>("roadfin.shift", null);
+  const [dayOffOpen, setDayOffOpen] = useState(false);
+  const [calcOpen, setCalcOpen] = useState(false);
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (!shift) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [shift]);
+
   const greeting = greetingFor(new Date());
   const today = new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" });
 
@@ -30,6 +41,7 @@ function TodayPage() {
   const todayGross = logsToday.reduce((s, l) => s + l.grossRevenue, 0);
   const dayStatus = logsToday.length === 0 ? "neutral" : getProfitStatus(todayProfit, todayGross);
   const dayMessages: Record<typeof dayStatus, string> = {
+
     positive: "Você está no ritmo certo. 👏",
     warning: "Atenção: margem apertada hoje.",
     negative: "Hoje fechou no prejuízo. Vamos analisar.",
