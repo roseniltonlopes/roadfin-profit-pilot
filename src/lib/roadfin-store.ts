@@ -120,7 +120,11 @@ export const store = {
       store.getLogs().filter((l) => l.id !== id),
     );
   },
+  getShift: () => read<Shift>(KEYS.shift),
+  startShift: () => write<Shift>(KEYS.shift, { startedAt: new Date().toISOString() }),
+  endShift: () => write<Shift | null>(KEYS.shift, null),
 };
+
 
 export const KEYS_EXPORT = KEYS;
 
